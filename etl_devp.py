@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 '''
-@scriptName: DB2-DB2×÷Òµ½Ó¿Ú¿ª·¢
-@function:  ¸ù¾İtableFile¡¢mapping±ê×¼ÎÄ¼şÉú³É¶ÔÓ¦µÄ¹©DMPµ¼ÈëÎÄ¼ş¡£
-@author:  ÕÅÃ÷²©
-@createTime: 2018Äê11ÔÂ30ÈÕ
+@scriptName: DB2-DB2ä½œä¸šæ¥å£å¼€å‘
+@function:  æ ¹æ®tableFileã€mappingæ ‡å‡†æ–‡ä»¶ç”Ÿæˆå¯¹åº”çš„ä¾›DMPå¯¼å…¥æ–‡ä»¶ã€‚
+@author:  zmb
+@createTime: 2018å¹´11æœˆ30æ—¥
 
 '''
 import sys,os
@@ -14,8 +14,8 @@ import xlwt
 import operator
 import shutil
 
-#·şÎñÆ÷ºÍÏµÍ³±äÂıÓ³Éä£º
-#·şÎñÆ÷ºÍÊı¾İ¿âÓ³Éä:
+#æœåŠ¡å™¨å’Œç³»ç»Ÿå˜æ…¢æ˜ å°„ï¼š
+#æœåŠ¡å™¨å’Œæ•°æ®åº“æ˜ å°„:
 ser_sys_mapping = {'CBH':'LN08','CBM':'LF06','CBQ':'LN08'}
 ser_db2_mapping = {'CBH':'CBDMDB','CBM':'CBDMDB','CBQ':'CBMDB'}
 
@@ -73,7 +73,7 @@ colAU=47
 
 def sourceDataList_read_fun(filename):
  '''
- ¶ÁÈ¡Ô´ÎÄ¼ş
+ è¯»å–æºæ–‡ä»¶
  '''
  dlist=[]
 
@@ -83,10 +83,10 @@ def sourceDataList_read_fun(filename):
     print('reading',f)
     filename = ''.join((root,f))
 
-    tb=xlrd.open_workbook(filename) #¶ÁÎÄ¼şsheet
+    tb=xlrd.open_workbook(filename) #è¯»æ–‡ä»¶sheet
     tSheet=tb.sheet_by_name(u'Sheet1')
     
-    #Ô´±í£¬Ä¿±ê±í---»ù±¾ĞÅÏ¢
+    #æºè¡¨ï¼Œç›®æ ‡è¡¨---åŸºæœ¬ä¿¡æ¯
     tbMode=str(tSheet.cell(1,0).value).strip().lstrip().rstrip()
     tbDBNm=str(tSheet.cell(1,1).value).strip().lstrip().rstrip()
     tbDestMode=str(tSheet.cell(1,2).value).strip().lstrip().rstrip()
@@ -105,17 +105,17 @@ def sourceDataList_read_fun(filename):
     nrows=tSheet.nrows
 
     for col in range(6,11):
-     #¶ÁÈ¡×Ö¶ÎĞÅÏ¢ ×Ö¶ÎĞÅÏ¢´ÓµÚ6£¬7£¬8£¬9£¬10ĞĞ¿ªÊ¼
+     #è¯»å–å­—æ®µä¿¡æ¯ å­—æ®µä¿¡æ¯ä»ç¬¬6ï¼Œ7ï¼Œ8ï¼Œ9ï¼Œ10è¡Œå¼€å§‹
      tmp=[]
      for row in range(1,nrows):
       tmp.append(str(tSheet.cell(row,col).value).strip().lstrip().rstrip())
       #print(tSheet.cell(row,col).value)
      tmpdlist.append(tmp)
     
-    #¶ÁÈ¡³éÈ¡Ìõ¼ş:
+    #è¯»å–æŠ½å–æ¡ä»¶:
     tb_select_filt = str(tSheet.cell(1,11).value).lstrip().rstrip()
     tmpdlist.append(tb_select_filt)
-    #¶ÁÈ¡Ä¿±ê±íÃû³Æ
+    #è¯»å–ç›®æ ‡è¡¨åç§°
     dst_table_name = str(tSheet.cell(1,12).value).lstrip().rstrip()
     tmpdlist.append(dst_table_name)
     
@@ -131,30 +131,30 @@ def sourceDataList_read_fun(filename):
  
  
 def writeTableFile_fun(filename,dlist):
- '''Ğ´Êı¾İµ½tablefile
+ '''å†™æ•°æ®åˆ°tablefile
  '''
  
- #¶Ô±ê×¼Ä£°å½øĞĞ¸´ÖÆ£¬²úÉúÒ»¸ö¸±±¾
+ #å¯¹æ ‡å‡†æ¨¡æ¿è¿›è¡Œå¤åˆ¶ï¼Œäº§ç”Ÿä¸€ä¸ªå‰¯æœ¬
  std_file= r'D:\RTC_201811\output\stdmodel\tableFile.xlsx'
  shutil.copyfile(std_file,filename)
  
- """¶Ôexcel±í¸ñµÄ²Ù×÷"""
+ """å¯¹excelè¡¨æ ¼çš„æ“ä½œ"""
  xlApp=win32com.client.Dispatch('Excel.Application')
  xlApp.Visible=0
- xlApp.DisplayAlerts=0    #ºóÌ¨ÔËĞĞ£¬²»ÏÔÊ¾£¬²»¾¯¸æ
+ xlApp.DisplayAlerts=0    #åå°è¿è¡Œï¼Œä¸æ˜¾ç¤ºï¼Œä¸è­¦å‘Š
  try:
   xlBook=xlApp.Workbooks.Open(filename)
  except:
-  print('´ò¿ªÎÄ¼şÊ§°Ü')
+  print('æ‰“å¼€æ–‡ä»¶å¤±è´¥')
   
- wt_t=xlBook.Worksheets('±í')
- wt_f=xlBook.Worksheets('×Ö¶Î')
+ wt_t=xlBook.Worksheets('è¡¨')
+ wt_f=xlBook.Worksheets('å­—æ®µ')
 
  tableCount=0
- tableRow=2  #´ÓµÚ¶şĞĞ¿ªÊ¼Ğ´
+ tableRow=2  #ä»ç¬¬äºŒè¡Œå¼€å§‹å†™
 
  for tlist in dlist:
-  #[Ä£Ê½Ãû£¬Ä¿±êÄ£Ê½Ãû£¬Ä¿±êÊı¾İ¿âÃû£¬±íÃû£¬±íÖĞÎÄÃû£¬[×Ö¶Î...]£¬[×Ö¶ÎËµÃ÷]£¬[×Ö¶ÎÀàĞÍ...]£¬[pk..]£¬[pi...]
+  #[æ¨¡å¼åï¼Œç›®æ ‡æ¨¡å¼åï¼Œç›®æ ‡æ•°æ®åº“åï¼Œè¡¨åï¼Œè¡¨ä¸­æ–‡åï¼Œ[å­—æ®µ...]ï¼Œ[å­—æ®µè¯´æ˜]ï¼Œ[å­—æ®µç±»å‹...]ï¼Œ[pk..]ï¼Œ[pi...]
   src=tlist[1]
   dst=tlist[3]  
   
@@ -169,64 +169,64 @@ def writeTableFile_fun(filename,dlist):
   ftxtlist=tlist[8]
   pklist=tlist[9]
   pilist=tlist[10]
-  tb_select_filt = tlist[11] #¹ıÂËÌõ¼ş
+  tb_select_filt = tlist[11] #è¿‡æ»¤æ¡ä»¶
   
   if len(tlist[12])<1:
    dst_table_name = tableName_en
   else:
-   dst_table_name = tlist[12] #Ä¿±ê±íÃû³Æ
+   dst_table_name = tlist[12] #ç›®æ ‡è¡¨åç§°
   
   if len(tb_select_filt)>1:
-   mval_AP = 'ÔöÁ¿'
+   mval_AP = 'å¢é‡'
   else:
-   mval_AP = 'È«Á¿'
+   mval_AP = 'å…¨é‡'
 
-  #±í
+  #è¡¨
   tmptb_row=tableCount*2
   row_source=tmptb_row+2
   row_dest=tmptb_row+3
-  wt_t.Cells(row_source, colA).Value='Ô´'       #Ô´±í£ºÀ´Ô´Ä¿±ê±êÖ¾
-  wt_t.Cells(row_source, colB).Value=src      #Ô´±í£º·şÎñÆ÷±àÂë
-  wt_t.Cells(row_source, colC).Value=ser_sys_mapping[src]   #Ô´±í£ºÏµÍ³±àÂë
-  wt_t.Cells(row_source, colD).Value=ser_db2_mapping[src] #Ô´±í£ºÊı¾İ¿âÃû
+  wt_t.Cells(row_source, colA).Value='æº'       #æºè¡¨ï¼šæ¥æºç›®æ ‡æ ‡å¿—
+  wt_t.Cells(row_source, colB).Value=src      #æºè¡¨ï¼šæœåŠ¡å™¨ç¼–ç 
+  wt_t.Cells(row_source, colC).Value=ser_sys_mapping[src]   #æºè¡¨ï¼šç³»ç»Ÿç¼–ç 
+  wt_t.Cells(row_source, colD).Value=ser_db2_mapping[src] #æºè¡¨ï¼šæ•°æ®åº“å
   wt_t.Cells(row_source, colE).Value=ts_fromMode
   wt_t.Cells(row_source, colF).Value=tableName_en
   wt_t.Cells(row_source, colG).Value=tableName_ch
-  wt_t.Cells(row_source, colH).Value='±í'       #Ô´±í£º±íÀàĞÍ
-  wt_t.Cells(row_source, colI).Value=tableName_en                #ÕæÊµÔ´±íÃû
-  wt_t.Cells(row_source, colJ).Value='ÊÇ'      #Ô´±í£ºÊÇ·ñ¿ÉÒıÓÃ
-  wt_t.Cells(row_source, colK).Value='1'       #Ô´±í£º×÷ÒµĞòºÅ
-  wt_t.Cells(row_source, colL).Value='·ñ'       #ÊÇ·ñÍ¬²½
-  wt_t.Cells(row_source, colU).Value='·ñ'       #ÎïÀíÉ¾³ı±êÖ¾
-  #ÈÕÖÕ¶¨Ê±:
-  #wt_t.Cells(row_source, colO).Value='ÊÇ'
+  wt_t.Cells(row_source, colH).Value='è¡¨'       #æºè¡¨ï¼šè¡¨ç±»å‹
+  wt_t.Cells(row_source, colI).Value=tableName_en                #çœŸå®æºè¡¨å
+  wt_t.Cells(row_source, colJ).Value='æ˜¯'      #æºè¡¨ï¼šæ˜¯å¦å¯å¼•ç”¨
+  wt_t.Cells(row_source, colK).Value='1'       #æºè¡¨ï¼šä½œä¸šåºå·
+  wt_t.Cells(row_source, colL).Value='å¦'       #æ˜¯å¦åŒæ­¥
+  wt_t.Cells(row_source, colU).Value='å¦'       #ç‰©ç†åˆ é™¤æ ‡å¿—
+  #æ—¥ç»ˆå®šæ—¶:
+  #wt_t.Cells(row_source, colO).Value='æ˜¯'
   #wt_t.Cells(row_source, colP).Value='18'
-  wt_t.Cells(row_source, colQ).Value='Ã¿ÈÕ'
+  wt_t.Cells(row_source, colQ).Value='æ¯æ—¥'
   ######################################################
-  wt_t.Cells(row_source, colAH).Value='ÊÇ'     #ÊÇ·ñË½ÓĞ
-  wt_t.Cells(row_source, colAI).Value='±ê×¼ÎÄ¼ş'    #Ô´±í£ºÄ¿±ê¶ÔÏóÀàĞÍ 
-  wt_t.Cells(row_source, colAJ).Value='DXP_EX_DB2_TO_STD_01'  #Ô´±í£º×÷ÒµÄ£°åÃû³Æ AJ
+  wt_t.Cells(row_source, colAH).Value='æ˜¯'     #æ˜¯å¦ç§æœ‰
+  wt_t.Cells(row_source, colAI).Value='æ ‡å‡†æ–‡ä»¶'    #æºè¡¨ï¼šç›®æ ‡å¯¹è±¡ç±»å‹ 
+  wt_t.Cells(row_source, colAJ).Value='DXP_EX_DB2_TO_STD_01'  #æºè¡¨ï¼šä½œä¸šæ¨¡æ¿åç§° AJ
   wt_t.Cells(row_source, colAK).Value='DXP'
   wt_t.Cells(row_source, colAL).Value='LT06'
   wt_t.Cells(row_source, colAN).Value='/DW_DXP/DATA/HQ/'+ ser_sys_mapping[src]+'/#ETL_DAT#'
   wt_t.Cells(row_source, colAO).Value=ser_sys_mapping[src]+"_P_"+ src+"_" + ts_fromDataBase + "_"+ts_fromMode+"_"+tableName_en
   ######################################################
 
-  wt_t.Cells(row_dest, colA).Value='Ä¿±ê'      #Ä¿±ê±í£ºÀ´Ô´Ä¿±ê±êÖ¾
-  wt_t.Cells(row_dest, colB).Value=dst      #Ä¿±ê±í£º·şÎñÆ÷±àÂë
-  wt_t.Cells(row_dest, colC).Value=ser_sys_mapping[dst]   #Ä¿±ê±í£ºÏµÍ³±àÂë
-  wt_t.Cells(row_dest, colD).Value=ser_db2_mapping[dst]  #Ä¿±ê±í£ºÊı¾İ¿âÃû
+  wt_t.Cells(row_dest, colA).Value='ç›®æ ‡'      #ç›®æ ‡è¡¨ï¼šæ¥æºç›®æ ‡æ ‡å¿—
+  wt_t.Cells(row_dest, colB).Value=dst      #ç›®æ ‡è¡¨ï¼šæœåŠ¡å™¨ç¼–ç 
+  wt_t.Cells(row_dest, colC).Value=ser_sys_mapping[dst]   #ç›®æ ‡è¡¨ï¼šç³»ç»Ÿç¼–ç 
+  wt_t.Cells(row_dest, colD).Value=ser_db2_mapping[dst]  #ç›®æ ‡è¡¨ï¼šæ•°æ®åº“å
   wt_t.Cells(row_dest, colE).Value=ts_targetMode
   wt_t.Cells(row_dest, colF).Value= dst_table_name
   wt_t.Cells(row_dest, colG).Value=tableName_ch
-  wt_t.Cells(row_dest, colH).Value='±í'       # Ä¿±ê±í£º±íÀàĞÍ
-  wt_t.Cells(row_dest, colL).Value='·ñ'       # ÊÇ·ñÍ¬²½
-  wt_t.Cells(row_dest, colU).Value='·ñ'       #ÎïÀíÉ¾³ı±êÖ¾
-  wt_t.Cells(row_dest, colAH).Value='ÊÇ'     #ÊÇ·ñË½ÓĞ
+  wt_t.Cells(row_dest, colH).Value='è¡¨'       # ç›®æ ‡è¡¨ï¼šè¡¨ç±»å‹
+  wt_t.Cells(row_dest, colL).Value='å¦'       # æ˜¯å¦åŒæ­¥
+  wt_t.Cells(row_dest, colU).Value='å¦'       #ç‰©ç†åˆ é™¤æ ‡å¿—
+  wt_t.Cells(row_dest, colAH).Value='æ˜¯'     #æ˜¯å¦ç§æœ‰
   
-  #×Ö¶Î
+  #å­—æ®µ
   rowf=len(fieldlist)
-  seqlist=[seq for seq in range(rowf)]   #×Ö¶ÎĞòºÅ
+  seqlist=[seq for seq in range(rowf)]   #å­—æ®µåºå·
   typelist=[]
   flenlist=[]
   fprecision=[]
@@ -290,8 +290,8 @@ def writeTableFile_fun(filename,dlist):
     fprecision.append(0)
     continue
    if re.match(r'DECIMAL\(\d+,\d+\)',key):
-    type_len=key[8:key.find(',')]  #½ØÈ¡DECIMALµÄ³¤¶È
-    type_prc=key[key.rfind(',')+1:-1] #½ØÈ¡DECIMALµÄ¾«¶È
+    type_len=key[8:key.find(',')]  #æˆªå–DECIMALçš„é•¿åº¦
+    type_prc=key[key.rfind(',')+1:-1] #æˆªå–DECIMALçš„ç²¾åº¦
     if int(type_len)>=24:
      type_len='24'
     if int(type_prc)>=7:
@@ -304,34 +304,34 @@ def writeTableFile_fun(filename,dlist):
    flenlist.append('')
    fprecision.append('')
    print(tableName_en,key,end='--')
-   print('Î´Æ¥Åä×Ö·ûÀàĞÍ')
+   print('æœªåŒ¹é…å­—ç¬¦ç±»å‹')
   ispklist=[]
   pkseqlist=[]
   ispkCanNull=[]
   pknum=0
   for pk in pklist:
-   if pk=='ÊÇ':
+   if pk=='æ˜¯':
     ispklist.append(pk)
     pkseqlist.append(pknum)
-    ispkCanNull.append('ÊÇ')
+    ispkCanNull.append('æ˜¯')
     pknum +=1
    else:
-    ispklist.append('·ñ')
+    ispklist.append('å¦')
     pkseqlist.append('')
-    ispkCanNull.append('ÊÇ')
+    ispkCanNull.append('æ˜¯')
 
   ispilist=[]
   for pi in pilist:
    if pi!='':
-    ispilist.append('ÊÇ')
+    ispilist.append('æ˜¯')
    else:
-    ispilist.append('·ñ')
+    ispilist.append('å¦')
 
-  wt_f.Cells(tableRow,colZ).Value = 'ÈÕ³£³éÈ¡'  #³éÈ¡ÀàĞÍ´úÂë
-  wt_f.Cells(tableRow,colAB).Value = mval_AP   #ÔöÁ¿/È«Á¿
-  wt_f.Cells(tableRow,colAC).Value = tb_select_filt #Ä¿±ê¹ıÂËÌõ¼ş
-  wt_f.Cells(tableRow,colY).Value = tb_select_filt #³éÈ¡Ìõ¼ş
-  wt_f.Cells(tableRow,colAD).Value = 'ÊÇ'    #ÊÇ·ñÉú³É×÷Òµ
+  wt_f.Cells(tableRow,colZ).Value = 'æ—¥å¸¸æŠ½å–'  #æŠ½å–ç±»å‹ä»£ç 
+  wt_f.Cells(tableRow,colAB).Value = mval_AP   #å¢é‡/å…¨é‡
+  wt_f.Cells(tableRow,colAC).Value = tb_select_filt #ç›®æ ‡è¿‡æ»¤æ¡ä»¶
+  wt_f.Cells(tableRow,colY).Value = tb_select_filt #æŠ½å–æ¡ä»¶
+  wt_f.Cells(tableRow,colAD).Value = 'æ˜¯'    #æ˜¯å¦ç”Ÿæˆä½œä¸š
   
   #print(fieldlist)#,,,,flenlist,fprecision,ispklist,pkseqlist,ispilist,ispkCanNull,range(0,rowf))
 
@@ -354,10 +354,10 @@ def writeTableFile_fun(filename,dlist):
    wt_f.Cells(tmprow,colO).Value =pi
    wt_f.Cells(tmprow,colP).Value =ispknull
    
-   wt_f.Cells(tmprow,colS).Value ='·ñ'   #´úÂë±êÖ¾
-   wt_f.Cells(tmprow,colU).Value ='·ñ'   #ÊÇ·ñÃô¸Ğ×Ö¶Î
+   wt_f.Cells(tmprow,colS).Value ='å¦'   #ä»£ç æ ‡å¿—
+   wt_f.Cells(tmprow,colU).Value ='å¦'   #æ˜¯å¦æ•æ„Ÿå­—æ®µ
    wt_f.Cells(tmprow,colW).Value =field
-   wt_f.Cells(tmprow,colX).Value ='±ê×¼×ª»»'
+   wt_f.Cells(tmprow,colX).Value ='æ ‡å‡†è½¬æ¢'
    #-----------------------------------------------------------------------
    tmprow=tmprow+rowf
    wt_f.Cells(tmprow,colA).Value =dst
@@ -372,12 +372,12 @@ def writeTableFile_fun(filename,dlist):
    wt_f.Cells(tmprow,colJ).Value =fieldlen
    wt_f.Cells(tmprow,colK).Value =fieldpre
    wt_f.Cells(tmprow,colL).Value =''
-   wt_f.Cells(tmprow,colM).Value ='·ñ'
+   wt_f.Cells(tmprow,colM).Value ='å¦'
    wt_f.Cells(tmprow,colN).Value =0
    wt_f.Cells(tmprow,colO).Value =pi
-   wt_f.Cells(tmprow,colP).Value ='ÊÇ'
-   wt_f.Cells(tmprow,colS).Value ='·ñ'   #´úÂë±êÖ¾
-   wt_f.Cells(tmprow,colU).Value ='·ñ'   #ÊÇ·ñÃô¸Ğ×Ö¶Î   
+   wt_f.Cells(tmprow,colP).Value ='æ˜¯'
+   wt_f.Cells(tmprow,colS).Value ='å¦'   #ä»£ç æ ‡å¿—
+   wt_f.Cells(tmprow,colU).Value ='å¦'   #æ˜¯å¦æ•æ„Ÿå­—æ®µ   
    
   tableRow+=rowf*2
   tableCount+=1
@@ -389,89 +389,89 @@ def writeTableFile_fun(filename,dlist):
 ################################################################################# 
  
 def writeMapFile_fun(filename,dlist):
- '''Ğ´Êı¾İµ½mapping'''
+ '''å†™æ•°æ®åˆ°mapping'''
  
- #¶Ô±ê×¼Ä£°å½øĞĞ¸´ÖÆ£¬²úÉúÒ»¸ö¸±±¾
+ #å¯¹æ ‡å‡†æ¨¡æ¿è¿›è¡Œå¤åˆ¶ï¼Œäº§ç”Ÿä¸€ä¸ªå‰¯æœ¬
  std_file= r'D:\RTC_201811\output\stdmodel\mapping.xlsx'
  shutil.copyfile(std_file,filename)
  
  """
- ¶Ô¸´ÖÆµÄexcel±í¸ñµÄ²Ù×÷
+ å¯¹å¤åˆ¶çš„excelè¡¨æ ¼çš„æ“ä½œ
  """
  xlApp=win32com.client.Dispatch('Excel.Application')
  xlApp.Visible=0
- xlApp.DisplayAlerts=0   #ºóÌ¨ÔËĞĞ£¬²»ÏÔÊ¾£¬²»¾¯¸æ
+ xlApp.DisplayAlerts=0   #åå°è¿è¡Œï¼Œä¸æ˜¾ç¤ºï¼Œä¸è­¦å‘Š
  try:
   xlBook=xlApp.Workbooks.Open(filename)
  except:
-  print('´ò¿ªÎÄ¼şÊ§°Ü')
- wt_f = xlBook.Worksheets('Êı¾İÓ³Éä')
+  print('æ‰“å¼€æ–‡ä»¶å¤±è´¥')
+ wt_f = xlBook.Worksheets('æ•°æ®æ˜ å°„')
  
  tableCount=1
- tableRow=3  #´ÓµÚÈıĞĞ¿ªÊ¼Ğ´mapping
- #Ã¿¸ö±í½øĞĞÑ­»·
+ tableRow=3  #ä»ç¬¬ä¸‰è¡Œå¼€å§‹å†™mapping
+ #æ¯ä¸ªè¡¨è¿›è¡Œå¾ªç¯
  for tlist in dlist:
-  #¶ÁÈ¡Ô´Ó³ÉäÎÄ¼ş»ñµÃµÄ±äÁ¿
-  src = tlist[1] #Ô´·şÎñÆ÷±àÂë
-  dst = tlist[3] #Ä¿±ê·şÎñÆ÷±àÂë
+  #è¯»å–æºæ˜ å°„æ–‡ä»¶è·å¾—çš„å˜é‡
+  src = tlist[1] #æºæœåŠ¡å™¨ç¼–ç 
+  dst = tlist[3] #ç›®æ ‡æœåŠ¡å™¨ç¼–ç 
   ts_fromMode=tlist[0]
-  ts_fromDataBase=ser_db2_mapping[src]  #ĞŞ¸Ä ser_db2_mapping
+  ts_fromDataBase=ser_db2_mapping[src]  #ä¿®æ”¹ ser_db2_mapping
   ts_targetMode=tlist[2]
-  ts_targetDataBase=ser_db2_mapping[dst]  #ĞŞ¸Ä ser_db2_mapping
+  ts_targetDataBase=ser_db2_mapping[dst]  #ä¿®æ”¹ ser_db2_mapping
   tableName_en=tlist[4]
   fieldlist=tlist[6]
-  tb_select_filt = tlist[11] #¹ıÂËÌõ¼ş
+  tb_select_filt = tlist[11] #è¿‡æ»¤æ¡ä»¶
   
   if len(tlist[12])<1:
    dst_table_name = tableName_en
   else:
-   dst_table_name = tlist[12] #Ä¿±ê±íÃû³Æ
+   dst_table_name = tlist[12] #ç›®æ ‡è¡¨åç§°
   
-  #linkÂ·¾¶
+  #linkè·¯å¾„
   mval_AM='/DW_DXP/DATA/HQ/'+ser_sys_mapping[src]+'/'+ser_sys_mapping[src]+'/'
-  #mapping³£Á¿:Ô´ÎÄ¼şÂ·¾¶
+  #mappingå¸¸é‡:æºæ–‡ä»¶è·¯å¾„
   mval_E='/DW_DXP/DATA/HQ/'+ ser_sys_mapping[src]+'/#ETL_DAT#'
   
   if len(tb_select_filt)>1:
-   mval_AP = 'ÔöÁ¿'
+   mval_AP = 'å¢é‡'
    #mval_AQ = 'INSERT'
   else:
-   mval_AP = 'È«Á¿'
+   mval_AP = 'å…¨é‡'
    
   rowf=len(fieldlist)
   tmp=tableRow
   
-  #±ê×¼ÎÄ¼şµ½Ä¿±ê¶ÔÏóµÄÓ³Éä£¬Ã¿¸ö±íÖ»ÓĞÒ»ĞĞ£¬²»ĞèÒªÑ­»·
-  # ÁĞºÍĞĞ¶¼ÊÇ´Ó1 ¿ªÊ¼µÄ¡£ËùÓĞĞèÒª+1
+  #æ ‡å‡†æ–‡ä»¶åˆ°ç›®æ ‡å¯¹è±¡çš„æ˜ å°„ï¼Œæ¯ä¸ªè¡¨åªæœ‰ä¸€è¡Œï¼Œä¸éœ€è¦å¾ªç¯
+  # åˆ—å’Œè¡Œéƒ½æ˜¯ä»1 å¼€å§‹çš„ã€‚æ‰€æœ‰éœ€è¦+1
   wt_f.Cells(tableRow, colAM).Value= mval_AM
-  wt_f.Cells(tableRow, colAO).Value='ÈÕ³£³éÈ¡'
-  wt_f.Cells(tableRow, colAQ).Value= 'LOAD'   #  ÔöÁ¿²åÈëµÄ·½Ê½ÊÇ INSERT
-  wt_f.Cells(tableRow, colAR).Value='ÊÇ'
+  wt_f.Cells(tableRow, colAO).Value='æ—¥å¸¸æŠ½å–'
+  wt_f.Cells(tableRow, colAQ).Value= 'LOAD'   #  å¢é‡æ’å…¥çš„æ–¹å¼æ˜¯ INSERT
+  wt_f.Cells(tableRow, colAR).Value='æ˜¯'
   wt_f.Cells(tableRow, colAS).Value=8
-  wt_f.Cells(tableRow, colAU).Value='ÊÇ'
+  wt_f.Cells(tableRow, colAU).Value='æ˜¯'
   wt_f.Cells(tableRow, colAP).Value=mval_AP
   wt_f.Cells(tableRow, colAN).Value=tb_select_filt
 
-  #Êı¾İÓ³Éä  ×Ö¶Î¼¯Ñ­»·
+  #æ•°æ®æ˜ å°„  å­—æ®µé›†å¾ªç¯
   for (field,row) in zip(fieldlist,range(0,rowf)):
    tmprow=row+tableRow
    
-   wt_f.Cells(tmprow,colA).Value ='±ê×¼ÎÄ¼ş'
+   wt_f.Cells(tmprow,colA).Value ='æ ‡å‡†æ–‡ä»¶'
    wt_f.Cells(tmprow,colB).Value ='DXP'
    wt_f.Cells(tmprow,colC).Value ='LT06'
    wt_f.Cells(tmprow,colE).Value =mval_E
    wt_f.Cells(tmprow,colF).Value =ser_sys_mapping[src]+"_P_"+ src+"_" + ts_fromDataBase + "_"+ts_fromMode+"_"+tableName_en
    wt_f.Cells(tmprow,colG).Value =field
-   wt_f.Cells(tmprow,colH).Value ='±ê×¼×ª»»'
-   wt_f.Cells(tmprow,colI).Value ='Ä¿±êÊı¾İ±í'
-   wt_f.Cells(tmprow,colJ).Value =dst       #Ä¿±ê·şÎñÆ÷±àÂë  dst_src
-   wt_f.Cells(tmprow,colK).Value =ser_sys_mapping[dst]    #Ä¿±êÏµÍ³±àÂë
-   wt_f.Cells(tmprow,colL).Value =ser_db2_mapping[dst]     #Ä¿±ê·şÎñÆ÷
+   wt_f.Cells(tmprow,colH).Value ='æ ‡å‡†è½¬æ¢'
+   wt_f.Cells(tmprow,colI).Value ='ç›®æ ‡æ•°æ®è¡¨'
+   wt_f.Cells(tmprow,colJ).Value =dst       #ç›®æ ‡æœåŠ¡å™¨ç¼–ç   dst_src
+   wt_f.Cells(tmprow,colK).Value =ser_sys_mapping[dst]    #ç›®æ ‡ç³»ç»Ÿç¼–ç 
+   wt_f.Cells(tmprow,colL).Value =ser_db2_mapping[dst]     #ç›®æ ‡æœåŠ¡å™¨
    wt_f.Cells(tmprow,colM).Value =ts_targetMode
    wt_f.Cells(tmprow,colN).Value =dst_table_name
    wt_f.Cells(tmprow,colQ).Value =field
    wt_f.Cells(tmprow,colR).Value ='DXP_LD_STD_01_TO_DB2'
-   wt_f.Cells(tmprow,colS).Value ='ÊÇ'
+   wt_f.Cells(tmprow,colS).Value ='æ˜¯'
 
   tableRow+=rowf
   tableCount+=1
